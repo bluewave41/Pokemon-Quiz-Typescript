@@ -30,28 +30,30 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     const pokemon: IPokemon = await Pokemon.findOne({ pokemonId: random });
 
-    const questionId = Math.floor(Math.random() * 4);
-
+    //const questionId = Math.floor(Math.random() * 4);
+    let questionId = 3;
     let question = '';
 
     switch(questionId) {
         case 1:
-            question = `What is the pokedex ID of ${pokemon.name}?`;
-            await User.updateOne({ expectedAnswer: pokemon.pokemonId}, { username: req.session.user.username });
+            user.currentQuestion = `What is the pokedex ID of ${pokemon.name}?`;
+            user.expectedAnswer = pokemon.pokemonId;
             break;
         case 2:
-            question = `What is the name of the Pokemon with pokedex ID ${pokemon.pokemonId}?`;
-            await User.updateOne({ expectedAnswer: pokemon.name}, { username: req.session.user.username });
+            user.currentQuestion = `What is the name of the Pokemon with pokedex ID ${pokemon.pokemonId}?`;
+            user.expectedAnswer = pokemon.name;
             break;
         case 3:
-            question = `What type or types is ${pokemon.name}?`;
-            await User.updateOne({ expectedAnswer: [pokemon.type1, pokemon.type2]}, { username: req.session.user.username });
+            user.currentQuestion = `What type or types is ${pokemon.name}?`;
+            user.expectedAnswer = [pokemon.type1, pokemon.type2];
             break;
         case 4:
-            question = `How/at what level does ${pokemon.name} evolve? (enter "none" if they do not evolve)`;
-            await User.updateOne({ expectedAnswer: pokemon.evolutionMethod}, { username: req.session.user.username });
+            user.currentQuestion = `How/at what level does ${pokemon.name} evolve? (enter "none" if they do not evolve)`;
+            user.expectedAnswer = pokemon.evolutionMethod;
             break;
     }
+
+    await user.save();
 
     //get question type
 

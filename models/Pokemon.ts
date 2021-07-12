@@ -6,7 +6,7 @@ export interface IPokemon {
 	evolutionName: string,
 	evolutionMethod: string,
 	type1: string,
-	type2: string
+	type2: string | null
 }
 
 const pokemonSchema = new Schema<IPokemon>({
